@@ -19,6 +19,7 @@
 #
 
 
+require 'pry'
 require 'uri'
 require 'cgi'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
@@ -284,7 +285,32 @@ Then /^the following categories exist:$/ do |table|
   end
 end
 
-Given /^that I click on "(.*?)"$/ do |arg1|
+# Given /^that I click on "(.*?)"$/ do |arg1|
+#    # express the regexp above with the code you wish you had
+#    page.find("a", :text => arg1).click
+# end
+
+Given /^that I click on "(.*?)" enclosed in "(.*?)"$/ do |link, parent|
    # express the regexp above with the code you wish you had
-   page.find("a", :text => arg1).click 
+   if parent.empty?
+     page.find("a", :text => arg1).click
+  else
+     within "##{parent}" do
+       page.find("a", :text => link).click
+     end
+  end
+end
+
+Then /^I should see the form to create new categories$/ do
+  expect(page).to have_selector('input#category_name')
+end
+
+Given /^I click edit of the "(.*?)" category$/ do |category_name|
+  category = Category.where(name: category_name).first
+  id = category.id
+  find("a[href='/admin/categories/edit/#{id}']").click
+end
+
+Then /^I should see the form to edit category of name "(.*?)"$/ do |category_name|
+  expect(page).to have_selector('input#category_name', value: category_name)
 end

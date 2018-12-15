@@ -13,15 +13,37 @@ Feature: Manage categories
      | Travel  |
 
   Scenario: Create category
-    Given that I click on "Categories"
+    Given that I click on "Categories" enclosed in "subtabs"
     Then I should see the form to create new categories
-    When I fill in Name with "Business"
-    And I click save
+    When I fill in "Name" with "Business"
+    And I press "Save"
     Then I should be on the categories admin page
-    And should see category has been created
-    And I should see Business in the Title column
+    And should see "Category was successfully saved"
+    And I should see "Business"
+
+  Scenario: Create category fails
+    Given that I click on "Categories" enclosed in "subtabs"
+    Then I should see the form to create new categories
+    When I fill in "Name" with ""
+    And I press "Save"
+    Then I should be on the categories admin page
+    And should see "Category could not be saved"
 
   Scenario: Edit a category
-    Given I click edit of the "music" category
-    When I am on the home page
-    Then I should not be on the edit page of "music" category
+    Given I am on the categories admin page
+    And I click edit of the "Music" category
+    Then I should see the form to edit category of name "Music"
+    When I fill in "Name" with "Business"
+    And I press "Save"
+    Then I should be on the categories admin page
+    And should see "Category was successfully saved"
+    And I should see "Business"
+
+  Scenario: Edit a category fails
+    Given I am on the categories admin page
+    And I click edit of the "Music" category
+    Then I should see the form to edit category of name "Music"
+    When I fill in "Name" with ""
+    And I press "Save"
+    Then I should be on the categories admin page
+    And should see "Category could not be saved"
