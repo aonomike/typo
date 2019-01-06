@@ -22,6 +22,11 @@ module NavigationHelpers
       '/admin'
     when /^the categories admin page$/
       '/admin/categories/new'
+    
+    when /^the admin edit content page for "([^'']*)"/
+      id = Content.where(title: $1).first.id
+      "admin/content/edit/#{id}"
+
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

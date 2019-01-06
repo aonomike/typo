@@ -285,6 +285,12 @@ Then /^the following categories exist:$/ do |table|
   end
 end
 
+Given /^the following articles exist:$/ do |table|
+  table.rows.flatten.each do |article_name|
+    Content.create!(title: article_name)
+  end
+end
+
 # Given /^that I click on "(.*?)"$/ do |arg1|
 #    # express the regexp above with the code you wish you had
 #    page.find("a", :text => arg1).click
@@ -313,4 +319,8 @@ end
 
 Then /^I should see the form to edit category of name "(.*?)"$/ do |category_name|
   expect(page).to have_selector('input#category_name', value: category_name)
+end
+
+Given /^I have administration rights$/ do
+  pending # express the regexp above with the code you wish you had
 end
