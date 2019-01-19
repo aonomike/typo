@@ -286,9 +286,11 @@ Then /^the following categories exist:$/ do |table|
 end
 
 Given /^the following articles exist:$/ do |table|
-  table.rows.flatten.each do |article_name|
-    Content.create!(title: article_name)
+  table.hashes.each do  | row | 
+    user_id = User.where(login: row[:author]).first.id
+    Article.create!( title: row[:title], user_id: user_id)
   end
+  require 'pry'; binding.pry
 end
 
 # Given /^that I click on "(.*?)"$/ do |arg1|
@@ -323,4 +325,11 @@ end
 
 Given /^I have administration rights$/ do
   pending # express the regexp above with the code you wish you had
+end
+
+Given /^the following users exist$/ do | user_table |
+  user_table.hashes.each do  | row | 
+    profile_id = Profile.where(label: row[:profile]).first.id
+    User.create!( password: row[:password], login: row[:login], email: row[:email], profile_id: profile_id)
+  end
 end
