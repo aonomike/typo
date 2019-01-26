@@ -151,3 +151,12 @@
 
 </div>
 
+<div>
+
+<%= form_tag("/merge", method: "post") do %>
+  <%= label_tag(:article_id, "Article ID") %>
+  <%= text_field_tag(:article_id) %>
+  <%= submit_tag("Merge") %>
+<% end %>
+</div>
+

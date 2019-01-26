@@ -288,9 +288,8 @@ end
 Given /^the following articles exist:$/ do |table|
   table.hashes.each do  | row | 
     user_id = User.where(login: row[:author]).first.id
-    Article.create!( title: row[:title], user_id: user_id)
+    Article.create!( title: row[:title], user_id: user_id, published_at: Time.now, allow_comments: true, body: 'A content with several data', permalink: 'a-big-article')
   end
-  require 'pry'; binding.pry
 end
 
 # Given /^that I click on "(.*?)"$/ do |arg1|
@@ -330,6 +329,18 @@ end
 Given /^the following users exist$/ do | user_table |
   user_table.hashes.each do  | row | 
     profile_id = Profile.where(label: row[:profile]).first.id
-    User.create!( password: row[:password], login: row[:login], email: row[:email], profile_id: profile_id)
+    User.create!( password: row[:password], login: row[:login], email: row[:email], profile_id: profile_id, state: row[:state])
   end
 end
+
+Given /^I am logged into the admin panel as "(.*?)" with password "(.*?)"$/ do |login, password|
+  visit '/accounts/login'
+  fill_in 'user_login', :with => login
+  fill_in 'user_password', :with => password
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end 

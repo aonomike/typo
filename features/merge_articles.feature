@@ -6,20 +6,22 @@ Feature: Merge articles
 Background:
     Given the blog is set up
     And the following users exist
-        | login         | password      | email                 | profile       |
-        | publisher     | pusblisher    | publisher@email.com   | publisher     |
-        | contributor   | contributor   | contributor@email.com | contributor   |
+        | login             | password          | email                     | profile       | state  |
+        | publisher         | pusblisher        | publisher@email.com       | publisher     | active |
+        | contributor       | contributor       | contributor@email.com     | contributor   | active |
+        | administrator     | administrator     | administrator@email.com   | admin         | active |
     And the following articles exist:
         | title         | author        |
         | Hello world   | publisher     |
         | Good try      | contributor   |
 
     Scenario: Successfuly merge articles
+    Given I am logged into the admin panel as "administrator" with password "administrator"
     And I am on the admin edit content page for "Hello world"
-    Given I have administration rights
-    When I fill in Article ID
-    And I click merge
-    Then I see the articles have been merged
+    When I fill in the following:
+    | Article ID | 1 |
+    And I press "Merge"
+    Then I should see "the articles have been merged"
 
     Scenario: Not successfuly merge articles
     Given 'average_joe' is on the edit content page for "Hello world"
