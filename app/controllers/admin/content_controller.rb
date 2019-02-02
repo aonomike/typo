@@ -140,10 +140,16 @@ class Admin::ContentController < Admin::BaseController
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
   def new_or_edit
+
+    unless params[:article_id].blank? 
+      article_to_merge = Article.find(params[:article_id])
+      params[:article][:body_and_extended] <<  article_to_merge.body
+    end
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
     @article.text_filter = current_user.text_filter if current_user.simple_editor?
+    @is_admin = current_user.admin?
 
     @post_types = PostType.find(:all)
     if request.post?

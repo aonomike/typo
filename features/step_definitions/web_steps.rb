@@ -86,6 +86,11 @@ When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
   fill_in(field, :with => value)
 end
 
+When /^I fill in "(.*?)" with id of "(.*?)"$/ do |field, value|
+  article_id = Article.where(title: value).first.id
+  fill_in(field, with: article_id)
+end
+
 When /^(?:|I )fill in "([^"]*)" for "([^"]*)"$/ do |value, field|
   fill_in(field, :with => value)
 end
@@ -288,7 +293,7 @@ end
 Given /^the following articles exist:$/ do |table|
   table.hashes.each do  | row | 
     user_id = User.where(login: row[:author]).first.id
-    Article.create!( title: row[:title], user_id: user_id, published_at: Time.now, allow_comments: true, body: 'A content with several data', permalink: 'a-big-article')
+    Article.create!( title: row[:title], user_id: user_id, published_at: Time.now, allow_comments: true, body: row[:body], permalink: 'a-big-article')
   end
 end
 
@@ -344,3 +349,19 @@ Given /^I am logged into the admin panel as "(.*?)" with password "(.*?)"$/ do |
     assert page.has_content?('Login successful')
   end
 end 
+
+Then /^I should( not)? see button "(.*?)"$/ do |arg1, arg2|
+  if arg1 
+    expect(page).to_not have_button("Merge")
+  else
+    expect(page).to have_button("Merge")
+  end
+end
+
+Then /^I should( not)? see field with id "(.*?)"$/ do |arg1, arg2|
+  if arg1
+    expect(page).to_not have_field("##{arg2}")
+  else
+    expect(page).to have_field(id: "##{arg2}")
+  end
+end
